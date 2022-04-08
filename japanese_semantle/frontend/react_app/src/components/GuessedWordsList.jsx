@@ -9,7 +9,7 @@ export default function GuessedWordsList() {
       <ul>
         { 
           words.map((word) => 
-            <li>{word}</li>
+            <li key={word}>{word}</li>
           ) 
         }
       </ul>

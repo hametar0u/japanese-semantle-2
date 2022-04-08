@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { GuessedWordsContext } from "./HomePage"
 
 export function Inputs() {
   const [word, setWord] = useState();
   const handleChange = ({target}) => setWord(target.value);
+
+  const { words, setWords } = useContext(GuessedWordsContext);
+  const handleSubmit = e => setWords([...words, e.target.value]);
 
   function evaluateGuess() {
     //TODO: perform POST request to server
@@ -11,7 +15,7 @@ export function Inputs() {
 
   return (
     <>
-      <form onSubmit={ () => evaluateGuess }>
+      <form onSubmit={handleSubmit}>
         <input 
           type="text" 
           placeholder="記入してください"
