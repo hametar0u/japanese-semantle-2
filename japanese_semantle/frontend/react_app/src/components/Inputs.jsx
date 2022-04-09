@@ -6,7 +6,10 @@ export function Inputs() {
   const handleChange = ({target}) => setWord(target.value);
 
   const { words, setWords } = useContext(GuessedWordsContext);
-  const handleSubmit = e => setWords([...words, e.target.value]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setWords([...words, word])
+  };
 
   function evaluateGuess() {
     //TODO: perform POST request to server
