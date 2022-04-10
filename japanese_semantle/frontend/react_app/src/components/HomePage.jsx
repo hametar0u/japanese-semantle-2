@@ -23,7 +23,8 @@ export default function HomePage() {
         const response = await axios.get(
           `http://localhost:8000/api/load_daily_top_1000/882`
         );
-        setData(response.data);
+        setData(response.data["response"]);
+        console.log(typeof data);
         setError(null);
       } catch (err) {
         setError(err.message);
@@ -46,9 +47,9 @@ export default function HomePage() {
         <div>{`There is a problem fetching the post data - ${error}`}</div>
       )}
       <ul>
-        {data && data.map(({w, s, r}) => (
-          <li key={r}>
-            {r} - {w} - {s}
+        {data && data.map(word => (
+          <li key={word.rank}>
+            {word.rank} - {word.word} - {word.score}
           </li>
         ))}
       </ul>
