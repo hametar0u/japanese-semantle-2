@@ -1,6 +1,6 @@
 import * as React from "react"
 import { useContext } from "react"
-import { GuessedWordsContext } from "./HomePage"
+import { GuessedWordsContext } from "../pages/HomePage"
 
 export default function GuessedWordsList() {
   const { words } = useContext(GuessedWordsContext);

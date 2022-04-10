@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { GuessedWordsContext } from "./HomePage"
+import { GuessedWordsContext } from "../pages/HomePage"
 
 export function Inputs() {
   const [word, setWord] = useState();
@@ -8,7 +8,8 @@ export function Inputs() {
   const { words, setWords } = useContext(GuessedWordsContext);
   const handleSubmit = (e) => {
     e.preventDefault();
-    setWords([...words, word])
+    setWords([...words, word]);
+    setWord('');
   };
 
   function evaluateGuess() {
