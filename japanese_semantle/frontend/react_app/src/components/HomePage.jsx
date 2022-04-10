@@ -21,7 +21,7 @@ export default function HomePage() {
     const getData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/load_daily_top_1000`
+          `http://localhost:8000/api/load_daily_top_1000/882`
         );
         setData(response.data);
         setError(null);

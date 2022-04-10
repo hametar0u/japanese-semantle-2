@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics, status
-from rest_framework.decorators import api_viewscor
+from rest_framework.decorators import api_view
 from .serializers import TodoSerializer
 from rest_framework.response import Response
 from .models import Word
@@ -15,10 +15,11 @@ class TodoListView(generics.ListAPIView):
 
 @api_view(['GET'])
 def load_daily_top_1000(request, key):
+
   #for some reason pk goes from 882 to 6064
   if key < 882 or key > 6063:
     return Response(status=status.HTTP_404_NOT_FOUND)
-  word = Word.objects.get(pk=target)
+  word = Word.objects.get(pk=key)
   dailyTop1000 = word.top1000_set.all()
 
   '''
@@ -38,11 +39,11 @@ def load_daily_top_1000(request, key):
   ]
   '''
   data = []
-  for i, w, s in enumerate(dailyTop1000):
+  for i, w in enumerate(dailyTop1000):
     obj = {
-      word: w.top1000word,
-      score: w.score,
-      rank: 1000 - i
+      "word": w.top1000word,
+      "score": w.score,
+      "rank": 1000 - i
     }
     data.append(obj)
 
