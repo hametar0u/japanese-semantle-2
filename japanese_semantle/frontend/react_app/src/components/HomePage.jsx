@@ -23,7 +23,14 @@ export default function HomePage() {
         const response = await axios.get(
           `http://localhost:8000/api/load_daily_top_1000/882`
         );
-        setData(response.data["response"]);
+
+        const reversedResponse = response.data["response"]
+        .slice(0)
+        .reverse()
+        .map(element => {
+          return element;
+        });
+        setData(reversedResponse);
         console.log(typeof data);
         setError(null);
       } catch (err) {
