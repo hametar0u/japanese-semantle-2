@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 
@@ -7,6 +8,16 @@ class Todo(models.Model):
 
   def __str__(self):
     return title
+
+class DailyKey(models.Model):
+  key = models.IntegerField()
+
+class VectorWord(models.Model):
+  word_text = models.CharField(max_length=255)
+  word_vec = ArrayField(
+    models.DecimalField(max_digits=10, decimal_places=6),
+    size=300
+  )
 
 class Word(models.Model):
   word_text = models.CharField(max_length=255)
