@@ -39,7 +39,11 @@ export default function WordDatabase() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    getData(key);
+    if(!key) {
+      getData(0);
+    } else{
+      getData(key);
+    }
   }
 
   useEffect(() => {

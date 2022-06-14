@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
-import { GuessedWordsContext } from "../pages/HomePage"
+import axios from "axios";
+import { GuessedWordsContext } from "../pages/HomePage";
 
 export function Inputs() {
   const [word, setWord] = useState();
@@ -8,6 +9,14 @@ export function Inputs() {
   const { words, setWords } = useContext(GuessedWordsContext);
   const handleSubmit = (e) => {
     e.preventDefault();
+    //insert database call
+    axios.post(`http://localhost:8000/api/evaluate_word/${word}`, {})
+    .then(response => {
+      console.log(response.data);
+    })
+    .catch(err => {
+      console.log(err.response);
+    })
     setWords([...words, word]);
     setWord('');
   };

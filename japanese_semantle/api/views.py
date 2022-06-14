@@ -5,6 +5,9 @@ from .serializers import TodoSerializer
 from rest_framework.response import Response
 from .models import Word
 
+import random
+import datetime
+
 from .models import Todo
 # Create your views here.
 
@@ -15,7 +18,8 @@ class TodoListView(generics.ListAPIView):
 
 @api_view(['GET'])
 def load_daily_top_1000(request, key):
-
+  if not key:
+    key = random.randrange(882,6063)
   #for some reason pk goes from 882 to 6064
   if key < 882 or key > 6063:
     return Response(status=status.HTTP_404_NOT_FOUND)
@@ -49,4 +53,7 @@ def load_daily_top_1000(request, key):
 
   return Response({"response": data})
 
+@api_view(['POST'])
+def evaluate_word(request, word):
 
+  return Response(word)
