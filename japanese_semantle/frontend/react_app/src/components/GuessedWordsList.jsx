@@ -9,7 +9,7 @@ export default function GuessedWordsList() {
       <ul>
         { 
           words.map((word) => 
-            <li key={word}>{word}</li>
+            <li key={word.word}>{word.word} - {Math.round(word.score * 100) / 100} - {word.rank}</li>
           ) 
         }
       </ul>

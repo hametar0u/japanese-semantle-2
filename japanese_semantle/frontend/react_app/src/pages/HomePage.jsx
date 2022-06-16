@@ -12,12 +12,14 @@ export const GuessedWordsContext = createContext({
 
 export default function HomePage() {
   const [words, setWords] = useState([]);
+  const [found, setFound] = useState(false);
 
   return (
     <>
     <GuessedWordsContext.Provider value={{words, setWords}}>
       <h1>Home Page</h1>
-      <Inputs />
+      <Inputs setFound={setFound} />
+      {found && <p>当たり！おめでとう！</p>}
       <GuessedWordsList />
     </GuessedWordsContext.Provider>
 

@@ -79,6 +79,8 @@ def evaluate_word(request, word):
 
   for i, topword in enumerate(top1000):
     if word == topword.top1000word:
+      if 1000 - i == 1:
+        return Response(status=status.HTTP_302_FOUND)
       obj = {
         "word": word,
         "score": topword.score,
