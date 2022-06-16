@@ -24,10 +24,12 @@ def isValidKey(key):
         return KeyType.INVALID
     elif key[0] == '#':
         return KeyType.HASHTAG
-    for char in key:
-        if ord(char) <= 128:
-            return KeyType.INVALID
+    elif key in ['', '、', '。', '（', '）', '「', '」', '・']:
+        return KeyType.INVALID
     else:
+        for char in key:
+            if ord(char) <= 128:
+                return KeyType.INVALID
         return KeyType.VALID
 
 # read data into dict
@@ -55,26 +57,16 @@ def populate_db(apps, schema_editor):
                 elif isValidKey(key) == KeyType.HASHTAG:
                     key = key[2:-2]
                 
-                vec = arr[1:]
-                vw = VectorWord(word_text=key, word_vec=vec)
-                vw.save()
+                if isValidKey(key) == KeyType.VALID:
+                    vec = arr[1:]
+                    vw = VectorWord(word_text=key, word_vec=vec)
+                    vw.save()
                 # embeddings[key] = vec
                 
                 if count == nWords:
                     break
                 count += 1
                 pbar.update(1)
-
-
-    #clean up other miscel characters
-    # del embeddings['']
-    # del embeddings['、']
-    # del embeddings['。']
-    # del embeddings['（']
-    # del embeddings['）']
-    # del embeddings['「']
-    # del embeddings['」']
-    # del embeddings['・']
 
 class Migration(migrations.Migration):
 
