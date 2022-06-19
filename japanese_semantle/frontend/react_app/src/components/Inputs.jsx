@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { GuessedWordsContext } from "../pages/HomePage";
 
@@ -7,7 +7,7 @@ export function Inputs({setFound}) {
   
   const handleChange = ({target}) => setWord(target.value);
 
-  const { words, setWords } = useContext(GuessedWordsContext);
+  const { words, setWords, mostRecentWord, setMostRecentWord } = useContext(GuessedWordsContext);
   const handleSubmit = (e) => {
     e.preventDefault();
     const unique = words.filter((word_obj) => {
@@ -28,12 +28,14 @@ export function Inputs({setFound}) {
     .then(response => {
       console.log(response.data);
       const res = response.data;
-      
-      setWords([...words, {
+      if (mostRecentWord) {
+        setWords([mostRecentWord, ...words]);
+      }
+      setMostRecentWord({
         word: res.word,
         score: res.score,
         rank: res.rank,
-      }]);
+      });
     })
     .catch(err => {
       console.log(err.response);
@@ -45,6 +47,13 @@ export function Inputs({setFound}) {
     })
     setWord('');
   };
+
+  useEffect(() => {
+    //might make it slow due to the O(nlogn) sort
+    setWords(words.sort((a,b) => {
+      return b.score - a.score;
+    }));
+  }, [words, setWords]);
 
   return (
     <>

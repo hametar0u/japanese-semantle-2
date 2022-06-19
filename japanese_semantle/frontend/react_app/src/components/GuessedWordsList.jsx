@@ -1,11 +1,11 @@
-import * as React from "react"
-import { useContext } from "react"
-import { GuessedWordsContext } from "../pages/HomePage"
+import { useContext } from "react";
+import { GuessedWordsContext } from "../pages/HomePage";
 
-export default function GuessedWordsList() {
+const GuessedWordsList = () => {
   const { words } = useContext(GuessedWordsContext);
   return (
     <div>
+      <h3>前の言葉</h3>
       <table>
         <th>言葉</th>
         <th>スコア</th>
@@ -23,4 +23,6 @@ export default function GuessedWordsList() {
       </table>
     </div>
   );
-}
+};
+
+export default GuessedWordsList;
