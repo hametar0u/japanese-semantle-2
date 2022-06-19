@@ -48,7 +48,7 @@ export default function WordDatabase() {
 
   useEffect(() => {
     getData(882);
-  }, []);
+  }, [data]);
 
   return (
     <>

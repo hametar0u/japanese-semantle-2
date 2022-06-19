@@ -6,13 +6,21 @@ export default function GuessedWordsList() {
   const { words } = useContext(GuessedWordsContext);
   return (
     <div>
-      <ul>
+      <table>
+        <th>言葉</th>
+        <th>スコア</th>
+        <th>ランキング</th>
         { 
           words.map((word) => 
-            <li key={word.word}>{word.word} - {Math.round(word.score * 100) / 100} - {word.rank}</li>
+            <tr>
+              <td>{word.word}</td>
+              <td>{Math.round(word.score * 100) / 100}</td>
+              <td>{word.rank}</td>
+            </tr>
+
           ) 
         }
-      </ul>
+      </table>
     </div>
   );
 }
