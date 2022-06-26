@@ -5,6 +5,7 @@ import GuessedWordsList from "../components/GuessedWordsList";
 import WinModal from "../components/WinModal";
 import ExplanationModal from "../components/ExplanationModal";
 
+
 import { Link } from "react-router-dom";
 // import { guessedWordsDataProvider, useGuessedWordsData } from "../hooks/guessedWordsContext"
 
@@ -41,7 +42,7 @@ export default function HomePage() {
   };
 
   return (
-    <div class="Homepage" style={containerStyle}>
+    <div className="flex items-center">
       <GuessedWordsContext.Provider value={{words, setWords, mostRecentWord, setMostRecentWord}}>
         {found && <WinModal restartGame={restartGame}/>}
         {explanationModalOpen && <ExplanationModal setClose={() => setExplanationModalOpen(false)} />}
