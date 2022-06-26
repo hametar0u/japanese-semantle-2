@@ -1,4 +1,4 @@
-import * as React from "react";
+import axios from "axios";
 import { useState, createContext } from "react";
 import { Inputs } from "../components/Inputs";
 import GuessedWordsList from "../components/GuessedWordsList";
@@ -23,6 +23,20 @@ export default function HomePage() {
 
   const restartGame = () => {
     setWords([]);
+    setMostRecentWord();
+    setFound(false);
+  };
+
+  const newGame = () => {
+    axios.post(`http://localhost:8000/api/new_game`, {})
+    .then(response => {
+      console.log(response.data);
+    })
+    .catch(err => {
+      console.log(err.response);
+    });
+    setWords([]);
+    setMostRecentWord();
     setFound(false);
   };
 
@@ -34,6 +48,7 @@ export default function HomePage() {
         <h1>M向けのゲーム</h1>
         <Inputs setFound={setFound} />
         <button onClick={() => setExplanationModalOpen(true)}>?</button>
+        <button onClick={newGame}>新ゲーム</button>
         {mostRecentWord && 
         <>
           <h3>最近の言葉</h3>

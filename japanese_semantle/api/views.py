@@ -20,6 +20,12 @@ class TodoListView(generics.ListAPIView):
   serializer_class = TodoSerializer
 
 #Todo: update the daily word
+@api_view(['POST'])
+def new_game(request):
+  key = DailyKey(key=random.randrange(882,6063))
+  key.save()
+  return Response(status=status.HTTP_200_OK)
+  
 
 @api_view(['GET'])
 def load_daily_top_1000(request, key):
