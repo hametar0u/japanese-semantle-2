@@ -2,6 +2,9 @@ import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { GuessedWordsContext } from "../pages/HomePage";
 
+//components
+import SubmitButton from "./SubmitButton";
+
 export function Inputs({setFound}) {
   const [word, setWord] = useState();
   
@@ -57,16 +60,15 @@ export function Inputs({setFound}) {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="flex">
         <input 
+          className="bg-cardbg text-p text-sm text-h1 rounded-lg border-0 focus:ring-h1 focus:drop-shadow-xl w-full p-2.5 m-3 "
           type="text" 
           placeholder="記入してください"
           value ={word}
           onChange={handleChange}
         />
-        <input 
-          type="submit"
-        />
+        <SubmitButton onClick={handleSubmit} name="送信" />
       </form>
     </>
   );

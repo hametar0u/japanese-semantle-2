@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, createContext } from "react";
+import NavButton from "../components/NavButton";
 import { Inputs } from "../components/Inputs";
 import GuessedWordsList from "../components/GuessedWordsList";
 import WinModal from "../components/WinModal";
@@ -7,6 +8,7 @@ import ExplanationModal from "../components/ExplanationModal";
 
 
 import { Link } from "react-router-dom";
+import SubmitButton from "../components/SubmitButton";
 // import { guessedWordsDataProvider, useGuessedWordsData } from "../hooks/guessedWordsContext"
 
 export const GuessedWordsContext = createContext({
@@ -42,35 +44,43 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex items-center">
-      <GuessedWordsContext.Provider value={{words, setWords, mostRecentWord, setMostRecentWord}}>
-        {found && <WinModal restartGame={restartGame}/>}
-        {explanationModalOpen && <ExplanationModal setClose={() => setExplanationModalOpen(false)} />}
-        <h1>M向けのゲーム</h1>
-        <Inputs setFound={setFound} />
-        <button onClick={() => setExplanationModalOpen(true)}>?</button>
-        <button onClick={newGame}>新ゲーム</button>
-        {mostRecentWord && 
-        <>
-          <h3>最近の言葉</h3>
-          <table>
-            <th>言葉</th>
-            <th>スコア</th>
-            <th>ランキング</th>
-            <tr>
-              <td>{mostRecentWord.word}</td>
-              <td>{Math.round(mostRecentWord.score * 100) / 100}</td>
-              <td>{mostRecentWord.rank}</td>
-            </tr>
-          </table>
-        </>
-        }
-        {words.length !== 0 && <GuessedWordsList />}
-      </GuessedWordsContext.Provider>
+    <>
+      <div>
+        <NavButton onClick={() => setExplanationModalOpen(true)} name="説明" />
+        <NavButton onClick={newGame} name="新ゲーム" />
+      </div>
+      {found && <WinModal restartGame={restartGame}/>}
+      {explanationModalOpen && <ExplanationModal setClose={() => setExplanationModalOpen(false)} />}
+    <div className="flex justify-center bg-background h-screen w-screen">
+      <div className="flex-col items-center w-1/2">
+        <GuessedWordsContext.Provider value={{words, setWords, mostRecentWord, setMostRecentWord}}>
+          <h1 className="text-4xl font-bold leading-normal mt-0 mb-2 text-h1">M向けのゲーム</h1>
+          <Inputs setFound={setFound} />
+          {mostRecentWord && 
+          <div className="m-3">
+            <h3 className="text-xl font-bold text-center p-3">今のゲス</h3>
+            <table className="w-full text-sm text-left text-h1 shadow-md">
+            <thead className="bg-secondary">
+              <th className="px-6 py-3">言葉</th>
+              <th className="px-6 py-3">スコア</th>
+              <th className="px-6 py-3">ランキング</th>
+            </thead>
+              <tr className="bg-cardbg border-t border-background">
+                <td className="px-6 py-3">{mostRecentWord.word}</td>
+                <td className="px-6 py-3">{Math.round(mostRecentWord.score * 100) / 100}</td>
+                <td className="px-6 py-3">{mostRecentWord.rank ? <p>mostRecentWord.rank</p> : <p>なし</p>}</td>
+              </tr>
+            </table>
+          </div>
+          }
+          {words.length !== 0 && <GuessedWordsList />}
+        </GuessedWordsContext.Provider>
 
-      <br />
-      <Link to={`load_words/882`}>Go to word database</Link>
+        <br />
+        <Link to={`load_words/882`}>Go to word database</Link>
+      </div>
     </div>
+    </>
   );
 };
 
