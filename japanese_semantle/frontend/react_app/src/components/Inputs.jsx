@@ -62,7 +62,7 @@ export function Inputs({setFound}) {
     <>
       <form onSubmit={handleSubmit} className="flex">
         <input 
-          className="bg-cardbg text-p text-sm text-h1 rounded-lg border-0 focus:ring-h1 focus:drop-shadow-xl w-full p-2.5 m-3 "
+          className="bg-background shadow-md text-p text-sm text-h1 rounded-lg border-0 focus:ring-h1 focus:drop-shadow-xl w-full p-2.5 m-3 "
           type="text" 
           placeholder="記入してください"
           value ={word}

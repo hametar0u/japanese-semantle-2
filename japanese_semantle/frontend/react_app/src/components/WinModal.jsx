@@ -1,19 +1,15 @@
-const style = {
-  width: "100vw",
-  height: "100vh",
-  position: "fixed",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "center",
-  backgroundColor: "rgb(145,71,142)"
-};
+import SubmitButton from "./SubmitButton";
 
 const WinModal = ({restartGame}) => {
   return ( 
-    <div style={style}>
-      <h2>当たり！おめでとう！</h2>
-      <button onClick={restartGame}>もう一回やろう？</button>
+    <div class="overlay-modal" className="bg-background fixed top-0 w-screen h-screen p-20">
+      <div class="container" className="bg-cardbg flex-col justify-center items-center rounded-lg m-72 p-5">
+        <h2 className="font-bold text-2xl text-h1 mt-2 mb-2">当たり！</h2>
+        <p className="text-p">
+          ＿回目で成功した！
+        </p>
+        <SubmitButton onClick={restartGame} name="もう一回やろう？" />
+      </div>
     </div>
   );
 }
