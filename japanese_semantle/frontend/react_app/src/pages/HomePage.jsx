@@ -27,6 +27,7 @@ export default function HomePage() {
     setWords([]);
     setMostRecentWord();
     setFound(false);
+    alert("リセットした");
   };
 
   const newGame = () => {
@@ -47,6 +48,9 @@ export default function HomePage() {
   return (
     <div className="bg-background">
       <div className="flex justify-end">
+        <h1 className="text-4xl font-bold leading-normal m-3 text-h1 mr-auto">
+          M向けのゲーム
+        </h1>
         <NavButton onClick={() => setExplanationModalOpen(true)} name="説明" />
         <NavButton onClick={newGame} name="新ゲーム" />
       </div>
@@ -55,15 +59,14 @@ export default function HomePage() {
         <ExplanationModal setClose={() => setExplanationModalOpen(false)} />
       )}
       <div className="flex justify-center bg-background h-full w-screen">
-        <div className="flex-col items-center w-1/2">
+        <div className="flex-col items-center w-9/12 xl:w-7/12 2-xl:w-5/12 max-w-[800px]">
+        <div class="divider" className="h-20" />
           <GuessedWordsContext.Provider
             value={{ words, setWords, mostRecentWord, setMostRecentWord }}
           >
-            <h1 className="text-4xl font-bold leading-normal mt-0 mb-2 text-h1">
-              M向けのゲーム
-            </h1>
-            <div className="flex">
-              <div className="flex-1 mb-10 mr-5 p-10 bg-cardbg rounded-xl">
+            
+            {/* <div className="flex"> */}
+              <div className="flex-1 mb-10 p-10 bg-cardbg rounded-xl">
                 <h3 className="text-3xl font-bold text-center p-3">
                   ここで当たってみて
                 </h3>
@@ -75,30 +78,32 @@ export default function HomePage() {
                     今のゲス
                   </h3>
                   <div className="relative overflow-x-auto shadow-md rounded-lg">
-                    <table className="w-full text-sm text-left text-h1 shadow-md">
-                      <thead className="bg-secondary">
-                        <th className="px-6 py-3">言葉</th>
-                        <th className="px-6 py-3">スコア</th>
-                        <th className="px-6 py-3">ランキング</th>
-                      </thead>
-                      <tr className="bg-background border-t border-cardbg">
-                        <td className="px-6 py-3">{mostRecentWord.word}</td>
-                        <td className="px-6 py-3">
+                    <table className="w-full text-md text-left text-h1 shadow-md">
+                      <thead className="bg-background text-center text-3xl lg:text-5xl">
+                        <th className="p-7 pb-2">
+                            {mostRecentWord.word}
+                        </th>
+                        <th className="p-7 pb-0">
                           {Math.round(mostRecentWord.score * 100) / 100}
-                        </td>
-                        <td className="px-6 py-3">
+                        </th>
+                        <th className="p-7 pb-0">
                           {mostRecentWord.rank ? (
                             <p>{mostRecentWord.rank}</p>
                           ) : (
                             <p>なし</p>
                           )}
-                        </td>
+                        </th>
+                      </thead>
+                      <tr className="bg-background text-center font-bold">
+                        <td className="p-7 pt-0">言葉</td>
+                        <td className="p-7 pt-0">スコア</td>
+                        <td className="p-7 pt-0">ランキング</td>
                       </tr>
                     </table>
                   </div>
                 </div>
               )}
-            </div>
+            {/* </div> */}
             {words.length !== 0 && <GuessedWordsList />}
           </GuessedWordsContext.Provider>
 

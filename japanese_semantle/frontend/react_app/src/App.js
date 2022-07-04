@@ -1,6 +1,7 @@
 import React from 'react';
 import HomePage from "./pages/HomePage";
 import WordDatabase from "./pages/WordDatabase";
+import Testpage from "./pages/Test";
 import {
   BrowserRouter as Router,
   Route,
@@ -19,6 +20,10 @@ function App() {
         <Route
           path="/load_words/:key"
           element={<WordDatabase />}
+        />
+        <Route
+          path="/test"
+          element={<Testpage />}
         />
       </Routes>
     </Router>

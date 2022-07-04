@@ -1,6 +1,6 @@
 import SubmitButton from "./SubmitButton";
 
-const WinModal = ({restartGame}) => {
+const WinModal = (props) => {
   return ( 
     <>
     <div class="overlay-modal" className="bg-background fixed top-0 w-screen h-screen z-10">
@@ -10,7 +10,7 @@ const WinModal = ({restartGame}) => {
         <p className="text-p mb-2">
           ＿回目で成功した！
         </p>
-        <SubmitButton onClick={restartGame} name="もう一回やろう？" style="mt-10"/>
+        <SubmitButton onClick={props.restartGame} name="もう一回やろう？" style="mt-10"/>
       </div>
     </>
   );
