@@ -9,11 +9,13 @@ import GuessedWordsList from "../components/GuessedWordsList";
 import SubmitButton from "../components/SubmitButton";
 import WinModal from "../components/WinModal";
 import ExplanationModal from "../components/ExplanationModal";
+import { SlidingWrapper } from "../components/MotionComponents";
 // import { guessedWordsDataProvider, useGuessedWordsData } from "../hooks/guessedWordsContext"
 
 //style stuff
 import AnimatedText from 'react-animated-text-content';
 import CountUp from 'react-countup';
+import { AnimatePresence } from "framer-motion";
 
 export const GuessedWordsContext = createContext({
   words: [],
@@ -26,8 +28,7 @@ export default function HomePage() {
   const [words, setWords] = useState([]);
   const [mostRecentWord, setMostRecentWord] = useState();
   const [found, setFound] = useState(false);
-  const [explanationModalOpen, setExplanationModalOpen] = useState(false);
-  const [startNum, setStartNum] = useState();
+  const [explanationModalOpen, setExplanationModalOpen] = useState(true);
 
   const restartGame = () => {
     setWords([]);
@@ -60,10 +61,12 @@ export default function HomePage() {
         <NavButton onClick={() => setExplanationModalOpen(true)} name="説明" />
         <NavButton onClick={newGame} name="新ゲーム" />
       </div>
-      {found && <WinModal restartGame={restartGame} />}
-      {explanationModalOpen && (
-        <ExplanationModal setClose={() => setExplanationModalOpen(false)} />
-      )}
+      {found && <WinModal restartGame={restartGame} numTries={words.length}/>}
+      <AnimatePresence>
+        {explanationModalOpen && (
+          <ExplanationModal setClose={() => setExplanationModalOpen(false)} />
+        )}
+      </AnimatePresence>
       <div className="flex justify-center bg-background h-full w-screen">
         <div className="flex-col items-center w-9/12 xl:w-7/12 2-xl:w-5/12 max-w-[800px]">
         <div class="divider" className="h-20" />
@@ -79,8 +82,8 @@ export default function HomePage() {
                 <Inputs setFound={setFound} />
               </div>
               {mostRecentWord && (
-                <div className="p-10 mb-10 bg-cardbg rounded-xl">
-                  <h3 className="text-3xl font-bold text-center text-h1 p-3">
+                <SlidingWrapper>
+                  <h3 className="text-3xl font-bold text-center text-h1 pb-5">
                     今のゲス
                   </h3>
                   <div className="relative overflow-x-auto shadow-md rounded-lg">
@@ -106,11 +109,10 @@ export default function HomePage() {
                         <th className="p-7 pb-0">
                           {mostRecentWord.rank ? (
                             <CountUp 
-                              start={startNum}
+                              start={1000}
                               end={mostRecentWord.rank} 
                               delay={3}
                               duration={1}
-                              onStart={() => setStartNum(1000)}
                             />
                           ) : (
                             <AnimatedText
@@ -130,7 +132,7 @@ export default function HomePage() {
                       </tr>
                     </table>
                   </div>
-                </div>
+                </SlidingWrapper>
               )}
             {/* </div> */}
             {words.length !== 0 && <GuessedWordsList />}

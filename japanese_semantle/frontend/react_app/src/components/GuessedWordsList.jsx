@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import { GuessedWordsContext } from "../pages/HomePage";
+import { SlidingWrapper } from "../components/MotionComponents";
 
 const GuessedWordsList = () => {
   const { words } = useContext(GuessedWordsContext);
   return (
-    <div className="p-10 mb-10 bg-cardbg rounded-xl">
-      <h3 className="text-3xl font-bold text-center p-3">試した言葉</h3>
+    <SlidingWrapper>
+      <h3 className="text-3xl font-bold text-center pb-5">試した言葉</h3>
       <div className="relative overflow-x-auto shadow-md rounded-lg">
         <table className="w-full text-md text-center text-h1">
           <thead className="bg-secondary">
@@ -28,7 +29,7 @@ const GuessedWordsList = () => {
           </tbody>
         </table>
       </div>
-    </div>
+    </SlidingWrapper>
   );
 };
 
