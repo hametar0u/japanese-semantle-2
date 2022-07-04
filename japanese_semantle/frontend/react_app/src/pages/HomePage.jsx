@@ -1,14 +1,19 @@
 import axios from "axios";
 import { useState, createContext } from "react";
+import { Link } from "react-router-dom";
+
+//components
 import NavButton from "../components/NavButton";
 import { Inputs } from "../components/Inputs";
 import GuessedWordsList from "../components/GuessedWordsList";
+import SubmitButton from "../components/SubmitButton";
 import WinModal from "../components/WinModal";
 import ExplanationModal from "../components/ExplanationModal";
-
-import { Link } from "react-router-dom";
-import SubmitButton from "../components/SubmitButton";
 // import { guessedWordsDataProvider, useGuessedWordsData } from "../hooks/guessedWordsContext"
+
+//style stuff
+import AnimatedText from 'react-animated-text-content';
+import CountUp from 'react-countup';
 
 export const GuessedWordsContext = createContext({
   words: [],
@@ -22,6 +27,7 @@ export default function HomePage() {
   const [mostRecentWord, setMostRecentWord] = useState();
   const [found, setFound] = useState(false);
   const [explanationModalOpen, setExplanationModalOpen] = useState(false);
+  const [startNum, setStartNum] = useState();
 
   const restartGame = () => {
     setWords([]);
@@ -78,19 +84,42 @@ export default function HomePage() {
                     今のゲス
                   </h3>
                   <div className="relative overflow-x-auto shadow-md rounded-lg">
-                    <table className="w-full text-md text-left text-h1 shadow-md">
+                    <table className="w-full text-md text-left text-h1 shadow-md overflow-hidden">
                       <thead className="bg-background text-center text-3xl lg:text-5xl">
                         <th className="p-7 pb-2">
-                            {mostRecentWord.word}
+                            <AnimatedText
+                              type="words"
+                              animationType="bounce"
+                              duration={0.2}
+                            >
+                              {mostRecentWord.word}
+                            </AnimatedText>
                         </th>
                         <th className="p-7 pb-0">
-                          {Math.round(mostRecentWord.score * 100) / 100}
+                          <CountUp 
+                            end={mostRecentWord.score * 100 / 100} 
+                            duration={1}
+                            delay={1}
+                            decimals={2}
+                          />
                         </th>
                         <th className="p-7 pb-0">
                           {mostRecentWord.rank ? (
-                            <p>{mostRecentWord.rank}</p>
+                            <CountUp 
+                              start={startNum}
+                              end={mostRecentWord.rank} 
+                              delay={3}
+                              duration={1}
+                              onStart={() => setStartNum(1000)}
+                            />
                           ) : (
-                            <p>なし</p>
+                            <AnimatedText
+                              type="words"
+                              animationType="bounce"
+                              duration={0.2}
+                            >
+                              なし
+                            </AnimatedText>
                           )}
                         </th>
                       </thead>
