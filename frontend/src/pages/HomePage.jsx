@@ -139,7 +139,7 @@ export default function HomePage() {
           </GuessedWordsContext.Provider>
 
           <br />
-          <Link to={`load_words/882`}>Go to word database</Link>
+          {/* <Link to={`load_words/882`}>Go to word database</Link> */}
         </div>
       </div>
     </div>
