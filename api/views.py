@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from .serializers import TodoSerializer
 from rest_framework.response import Response
 from django.http import HttpResponse, HttpResponseNotFound
+from django.views import View
 from .models import Word, VectorWord, DailyKey
 # from celery import Celery
 # from celery.schedules import crontab
@@ -20,16 +21,16 @@ class TodoListView(generics.ListAPIView):
   model = Todo
   serializer_class = TodoSerializer
 
-# class Assets(View):
+class Assets(View):
 
-#     def get(self, _request, filename):
-#         path = os.path.join(os.path.dirname(__file__), 'static', filename)
+    def get(self, _request, filename):
+        path = os.path.join(os.path.dirname(__file__), 'static', filename)
 
-#         if os.path.isfile(path):
-#             with open(path, 'rb') as file:
-#                 return HttpResponse(file.read(), content_type='application/javascript')
-#         else:
-#             return HttpResponseNotFound()
+        if os.path.isfile(path):
+            with open(path, 'rb') as file:
+                return HttpResponse(file.read(), content_type='application/javascript')
+        else:
+            return HttpResponseNotFound()
 
 
 #Todo: update the daily word
