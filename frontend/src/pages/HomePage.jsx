@@ -17,6 +17,10 @@ import AnimatedText from 'react-animated-text-content';
 import CountUp from 'react-countup';
 import { AnimatePresence } from "framer-motion";
 
+//some cross origin crap
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+
 export const GuessedWordsContext = createContext({
   words: [],
   setWords: () => {},
