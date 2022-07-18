@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from .serializers import TodoSerializer
 from rest_framework.response import Response
 from .models import Word, VectorWord, DailyKey
+import sys
 # from celery import Celery
 # from celery.schedules import crontab
 
@@ -24,6 +25,8 @@ class TodoListView(generics.ListAPIView):
 def new_game(request):
   key = DailyKey(key=random.randrange(882,6063))
   key.save()
+  request.session['key'] = random.randrange(882,6063)
+  print(f"session: {request.session['key']}", file=sys.stderr)
   return Response(status=status.HTTP_200_OK)
   
 
@@ -77,7 +80,9 @@ def score(a, b):
 
 @api_view(['POST'])
 def evaluate_word(request, word):
-  daily_key = DailyKey.objects.all().last().key
+  # daily_key = DailyKey.objects.all().last().key
+  daily_key = request.session.get('key')
+  print(daily_key, file=sys.stderr)
   daily_word = Word.objects.get(pk=daily_key)
   top1000 = daily_word.top1000_set.all()
   

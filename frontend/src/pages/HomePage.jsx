@@ -1,6 +1,5 @@
 import axios from "axios";
-import { useState, createContext } from "react";
-import { Link } from "react-router-dom";
+import { useState, createContext, useEffect } from "react";
 
 //components
 import NavButton from "../components/NavButton";
@@ -51,6 +50,10 @@ export default function HomePage() {
     setFound(false);
     alert("新しいゲームが作られました。");
   };
+
+  useEffect(() => {
+    newGame();
+  }, []);
 
   return (
     <div className="bg-background">

@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'japanese_semantle.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'top 1000 words',
+        'NAME': 'top1000_words',
         'USER': 'postgres',
         'PASSWORD': 'password',
         'PORT': '5432',
@@ -102,6 +102,7 @@ DATABASES = {
     }
 }
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
