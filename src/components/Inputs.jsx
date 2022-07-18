@@ -27,7 +27,7 @@ export function Inputs({setFound}) {
 
   const evaluateGuess = () => {
     //insert database call
-    axios.post(`http://localhost:8000/api/evaluate_word/${word}`, {})
+    axios.post(`/api/evaluate_word/${word}`, {})
     .then(response => {
       console.log(response.data);
       const res = response.data;
