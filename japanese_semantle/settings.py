@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-6h%9h8x@f=nbkiz+=8f%s3e=#40&tww*3$_sk5u6y+q$(@j9i&'
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -96,9 +96,9 @@ WSGI_APPLICATION = 'japanese_semantle.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USR"),
-        'PASSWORD': os.getenv("DB_PWD"),
+        'NAME': os.environ.get("DB_NAME"),
+        'USER': os.environ.get("DB_USR"),
+        'PASSWORD': os.environ.get("DB_PWD"),
         'PORT': '5432',
         'HOST': 'ec2-52-205-61-230.compute-1.amazonaws.com'
 
