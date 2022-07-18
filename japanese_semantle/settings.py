@@ -107,7 +107,7 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'top 1000 words',
+#         'NAME': 'top1000_words',
 #         'USER': 'postgres',
 #         'PASSWORD': 'password',
 #         'PORT': '5432',
