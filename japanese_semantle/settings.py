@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +22,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6h%9h8x@f=nbkiz+=8f%s3e=#40&tww*3$_sk5u6y+q$(@j9i&'
+# SECRET_KEY = 'django-insecure-6h%9h8x@f=nbkiz+=8f%s3e=#40&tww*3$_sk5u6y+q$(@j9i&'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['japanese-semantle.herokuapp.com']
 
 
 # Application definition
@@ -93,14 +96,25 @@ WSGI_APPLICATION = 'japanese_semantle.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'top 1000 words',
-        'USER': 'postgres',
-        'PASSWORD': 'password',
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USR"),
+        'PASSWORD': os.getenv("DB_PWD"),
         'PORT': '5432',
-        'HOST': 'localhost'
+        'HOST': 'ec2-52-205-61-230.compute-1.amazonaws.com'
 
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'top 1000 words',
+#         'USER': 'postgres',
+#         'PASSWORD': 'password',
+#         'PORT': '5432',
+#         'HOST': 'localhost'
+
+#     }
+# }
 
 
 # Password validation
@@ -139,7 +153,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = '/static/'
+django_heroku.settings(locals())
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
