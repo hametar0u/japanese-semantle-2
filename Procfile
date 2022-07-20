@@ -1,1 +1,1 @@
-web: gunicorn japanese_semantle.wsgi
+web: gunicorn japanese_semantle.wsgi --log-file=-

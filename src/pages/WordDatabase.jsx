@@ -13,7 +13,7 @@ export default function WordDatabase() {
   const getData = async (key) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/load_daily_top_1000/${key}`
+        `/api/load_daily_top_1000/${key}`
       );
 
       const reversedResponse = response.data["response"]

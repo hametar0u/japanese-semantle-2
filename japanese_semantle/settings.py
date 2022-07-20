@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +22,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6h%9h8x@f=nbkiz+=8f%s3e=#40&tww*3$_sk5u6y+q$(@j9i&'
+# SECRET_KEY = 'django-insecure-6h%9h8x@f=nbkiz+=8f%s3e=#40&tww*3$_sk5u6y+q$(@j9i&'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['japanese-semantle.herokuapp.com', '127.0.0.1:8000', 'localhost']
 
 
 # Application definition
@@ -41,7 +44,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'api',
-    'frontend',
 ]
 
 DJANGO_LIVESYNC = {
@@ -57,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'japanese_semantle.urls'
@@ -64,7 +67,7 @@ ROOT_URLCONF = 'japanese_semantle.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -93,14 +96,25 @@ WSGI_APPLICATION = 'japanese_semantle.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'top 1000 words',
-        'USER': 'postgres',
-        'PASSWORD': 'password',
+        'NAME': os.environ.get("DB_NAME"),
+        'USER': os.environ.get("DB_USR"),
+        'PASSWORD': os.environ.get("DB_PWD"),
         'PORT': '5432',
-        'HOST': 'localhost'
+        'HOST': 'ec2-52-205-61-230.compute-1.amazonaws.com'
 
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'top1000_words',
+#         'USER': 'postgres',
+#         'PASSWORD': 'password',
+#         'PORT': '5432',
+#         'HOST': 'localhost'
+
+#     }
+# }
 
 
 # Password validation
@@ -138,8 +152,15 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'build/static')
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+django_heroku.settings(locals())
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
