@@ -89,36 +89,103 @@ def score(a, b):
     x = round(x, 6)
     return sigmoid(x)
 
+# @api_view(['POST'])
+# def evaluate_word(request, word):
+#   daily_key = DailyKey.objects.all().last().key
+#   daily_word = Word.objects.get(pk=daily_key)
+#   top1000 = daily_word.top1000_set.all()
+  
+#   is_top1000 = False
+
+#   for i, topword in enumerate(top1000):
+#     if word == topword.top1000word:
+#       if 1000 - i == 1:
+#         return Response(status=status.HTTP_302_FOUND)
+#       obj = {
+#         "word": word,
+#         "score": topword.score,
+#         "rank": 1000 - i
+#       }
+#       return Response(obj)
+
+#   #calculate score if not top 1000
+#   daily_word_vector = VectorWord.objects.filter(word_text=daily_word.word_text)[0].word_vec
+#   target_words = VectorWord.objects.filter(word_text=word)
+
+#   if len(target_words) == 0:
+#     return Response(status=status.HTTP_404_NOT_FOUND)
+#   target_word_vector = target_words[0].word_vec
+
+#   #typecast
+#   daily_word_vector = np.array(daily_word_vector).astype('float64')
+#   target_word_vector = np.array(target_word_vector).astype('float64')
+
+#   vscore = score(daily_word_vector, target_word_vector)
+#   obj = {
+#     "word": word,
+#     "score": vscore,
+#     "rank": None
+#   }
+#   return Response(obj)
+
+import sparknlp
+from sparknlp.base import *
+from sparknlp.annotator import *
+from pyspark.ml import Pipeline
+from pyspark.context import SparkContext
+from pyspark.sql.session import SparkSession
+
+sparknlp.start()
+sc = SparkContext.getOrCreate()
+spark = SparkSession(sc)
+
+documentAssembler = DocumentAssembler() \
+.setInputCol("text") \
+.setOutputCol("document")
+
+sentence = SentenceDetector() \
+.setInputCols(["document"]) \
+.setOutputCol("sentence")
+
+word_segmenter = WordSegmenterModel.pretrained("wordseg_gsd_ud", "ja") \
+.setInputCols(["sentence"]) \
+.setOutputCol("token")
+
+lemmatizer = LemmatizerModel.pretrained("lemma", "ja") \
+.setInputCols(["token"]) \
+.setOutputCol("lemma")
+
+embeddings = WordEmbeddingsModel.pretrained("japanese_cc_300d", "ja") \
+.setInputCols("sentence", "token") \
+.setOutputCol("embeddings")
+
+pipeline = Pipeline().setStages([
+documentAssembler,
+sentence,
+word_segmenter,
+# lemmatizer,
+embeddings
+])
+
 @api_view(['POST'])
 def evaluate_word(request, word):
-  daily_key = DailyKey.objects.all().last().key
-  daily_word = Word.objects.get(pk=daily_key)
-  top1000 = daily_word.top1000_set.all()
-  
-  is_top1000 = False
+  data = spark.createDataFrame([['話']]).toDF("text")
+  model = pipeline.fit(data)
+  result = model.transform(data)
 
-  for i, topword in enumerate(top1000):
-    if word == topword.top1000word:
-      if 1000 - i == 1:
-        return Response(status=status.HTTP_302_FOUND)
-      obj = {
-        "word": word,
-        "score": topword.score,
-        "rank": 1000 - i
-      }
-      return Response(obj)
-
-  #calculate score if not top 1000
-  daily_word_vector = VectorWord.objects.filter(word_text=daily_word.word_text)[0].word_vec
-  target_words = VectorWord.objects.filter(word_text=word)
-
-  if len(target_words) == 0:
+  if len(result.select('embeddings').collect()[0].embeddings) != 1:
     return Response(status=status.HTTP_404_NOT_FOUND)
-  target_word_vector = target_words[0].word_vec
+  
+  daily_word_vector = np.array(result.select('embeddings').collect()[0].embeddings[0].embeddings).astype('float64')
 
-  #typecast
-  daily_word_vector = np.array(daily_word_vector).astype('float64')
-  target_word_vector = np.array(target_word_vector).astype('float64')
+  data = spark.createDataFrame([[word]]).toDF("text")
+  model = pipeline.fit(data)
+  result = model.transform(data)
+
+  if len(result.select('embeddings').collect()[0].embeddings) != 1:
+    return Response(status=status.HTTP_404_NOT_FOUND)
+  
+  target_word_vector = np.array(result.select('embeddings').collect()[0].embeddings[0].embeddings).astype('float64')
 
   vscore = score(daily_word_vector, target_word_vector)
   obj = {
