@@ -28,8 +28,11 @@ class Assets(View):
 #Todo: update the daily word
 @api_view(['POST'])
 def new_game(request):
-  key = DailyKey(key=random.randrange(882,6063))
-  key.save()
+  key = random.randrange(1,4375)
+  while len(DailyKey.objects.filter(key=key)) > 0:
+    key = random.randrange(1,4375)
+  k = DailyKey(key=key)
+  k.save()
   return Response(status=status.HTTP_200_OK)
   
 
@@ -70,15 +73,18 @@ def new_game(request):
 
 #   return Response({"response": data})
 
+import math
 def sigmoid(x):
     if x == 1:
         return 100
     return 100 * np.tanh(x)
-
 def score(a, b):
+    a = np.array(a)
+    b = np.array(b)
     x = a * b
-    x = sum(x) / (np.linalg.norm(a) * np.linalg.norm(b))
+    x = sum(x) / math.sqrt(sum(a*a)*sum(b*b))
     x = round(x, 6)
+#     return x
     return sigmoid(x)
 
 # @api_view(['POST'])
@@ -127,41 +133,47 @@ from pyspark.ml import Pipeline
 from pyspark.context import SparkContext
 from pyspark.sql.session import SparkSession
 
-# sparknlp.start()
-# sc = SparkContext.getOrCreate()
-# spark = SparkSession(sc)
+sparknlp.start()
+sc = SparkContext.getOrCreate()
+spark = SparkSession(sc)
 
-# documentAssembler = DocumentAssembler() \
-# .setInputCol("text") \
-# .setOutputCol("document")
+documentAssembler = DocumentAssembler() \
+.setInputCol("text") \
+.setOutputCol("document")
 
-# sentence = SentenceDetector() \
-# .setInputCols(["document"]) \
-# .setOutputCol("sentence")
+sentence = SentenceDetector() \
+.setInputCols(["document"]) \
+.setOutputCol("sentence")
 
-# word_segmenter = WordSegmenterModel.pretrained("wordseg_gsd_ud", "ja") \
-# .setInputCols(["sentence"]) \
-# .setOutputCol("token")
+word_segmenter = WordSegmenterModel.pretrained("wordseg_gsd_ud", "ja") \
+.setInputCols(["sentence"]) \
+.setOutputCol("token")
 
-# lemmatizer = LemmatizerModel.pretrained("lemma", "ja") \
-# .setInputCols(["token"]) \
-# .setOutputCol("lemma")
+lemmatizer = LemmatizerModel.pretrained("lemma", "ja") \
+.setInputCols(["token"]) \
+.setOutputCol("lemma")
 
-# embeddings = WordEmbeddingsModel.pretrained("japanese_cc_300d", "ja") \
-# .setInputCols("sentence", "token") \
-# .setOutputCol("embeddings")
+embeddings = WordEmbeddingsModel.pretrained("japanese_cc_300d", "ja") \
+.setInputCols("sentence", "token") \
+.setOutputCol("embeddings")
 
-# pipeline = Pipeline().setStages([
-# documentAssembler,
-# sentence,
-# word_segmenter,
-# # lemmatizer,
-# embeddings
-# ])
+pipeline = Pipeline().setStages([
+documentAssembler,
+sentence,
+word_segmenter,
+# lemmatizer,
+embeddings
+])
 
 @api_view(['POST'])
 def evaluate_word(request, word):
-  data = spark.createDataFrame([['話']]).toDF("text")
+  daily_key = DailyKey.objects.all().last().key
+  daily_word = Word.objects.get(id=daily_key)
+
+  if word == daily_word:
+    return Response(status=status.HTTP_302_FOUND)
+
+  data = spark.createDataFrame([[daily_word.word]]).toDF("text")
   model = pipeline.fit(data)
   result = model.transform(data)
 
@@ -180,9 +192,21 @@ def evaluate_word(request, word):
   target_word_vector = np.array(result.select('embeddings').collect()[0].embeddings[0].embeddings).astype('float64')
 
   vscore = score(daily_word_vector, target_word_vector)
+
+  rank = None
+
+  if vscore > daily_word.tiers[0]:
+    rank = 25
+  elif vscore > daily_word.tiers[1]:
+    rank = 100
+  elif vscore > daily_word.tiers[2]:
+    rank = 500
+  elif vscore > daily_word.tiers[3]:
+    rank = 1000
+
   obj = {
     "word": word,
     "score": vscore,
-    "rank": None
+    "rank": rank
   }
   return Response(obj)
