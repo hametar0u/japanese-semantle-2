@@ -1,11 +1,10 @@
 from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.decorators import api_view
-from .serializers import TodoSerializer
 from rest_framework.response import Response
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views import View
-from .models import Word, VectorWord, DailyKey
+from .models import Word, DailyKey
 # from celery import Celery
 # from celery.schedules import crontab
 
@@ -13,14 +12,7 @@ import random
 import datetime
 import numpy as np
 
-from .models import Todo
 # Create your views here.
-
-
-class TodoListView(generics.ListAPIView):
-  model = Todo
-  serializer_class = TodoSerializer
-
 class Assets(View):
 
     def get(self, _request, filename):
@@ -41,42 +33,42 @@ def new_game(request):
   return Response(status=status.HTTP_200_OK)
   
 
-@api_view(['GET'])
-def load_daily_top_1000(request, key):
-  if not key:
-    key = random.randrange(882,6063)
-  #for some reason pk goes from 882 to 6064
-  if key < 882 or key > 6063:
-    return Response(status=status.HTTP_404_NOT_FOUND)
-  word = Word.objects.get(pk=key)
-  dailyTop1000 = word.top1000_set.all()
+# @api_view(['GET'])
+# def load_daily_top_1000(request, key):
+#   if not key:
+#     key = random.randrange(882,6063)
+#   #for some reason pk goes from 882 to 6064
+#   if key < 882 or key > 6063:
+#     return Response(status=status.HTTP_404_NOT_FOUND)
+#   word = Word.objects.get(pk=key)
+#   dailyTop1000 = word.top1000_set.all()
 
-  '''
-  data structure:
-  [
-    {
-      word: "word",
-      score: 100,
-      rank: 1,
-    },
-    {
-      word: "words",
-      score: 58,
-      rank: 2,
-    },
-    ...
-  ]
-  '''
-  data = []
-  for i, w in enumerate(dailyTop1000):
-    obj = {
-      "word": w.top1000word,
-      "score": w.score,
-      "rank": 1000 - i
-    }
-    data.append(obj)
+#   '''
+#   data structure:
+#   [
+#     {
+#       word: "word",
+#       score: 100,
+#       rank: 1,
+#     },
+#     {
+#       word: "words",
+#       score: 58,
+#       rank: 2,
+#     },
+#     ...
+#   ]
+#   '''
+#   data = []
+#   for i, w in enumerate(dailyTop1000):
+#     obj = {
+#       "word": w.top1000word,
+#       "score": w.score,
+#       "rank": 1000 - i
+#     }
+#     data.append(obj)
 
-  return Response({"response": data})
+#   return Response({"response": data})
 
 def sigmoid(x):
     if x == 1:
@@ -135,37 +127,37 @@ from pyspark.ml import Pipeline
 from pyspark.context import SparkContext
 from pyspark.sql.session import SparkSession
 
-sparknlp.start()
-sc = SparkContext.getOrCreate()
-spark = SparkSession(sc)
+# sparknlp.start()
+# sc = SparkContext.getOrCreate()
+# spark = SparkSession(sc)
 
-documentAssembler = DocumentAssembler() \
-.setInputCol("text") \
-.setOutputCol("document")
+# documentAssembler = DocumentAssembler() \
+# .setInputCol("text") \
+# .setOutputCol("document")
 
-sentence = SentenceDetector() \
-.setInputCols(["document"]) \
-.setOutputCol("sentence")
+# sentence = SentenceDetector() \
+# .setInputCols(["document"]) \
+# .setOutputCol("sentence")
 
-word_segmenter = WordSegmenterModel.pretrained("wordseg_gsd_ud", "ja") \
-.setInputCols(["sentence"]) \
-.setOutputCol("token")
+# word_segmenter = WordSegmenterModel.pretrained("wordseg_gsd_ud", "ja") \
+# .setInputCols(["sentence"]) \
+# .setOutputCol("token")
 
-lemmatizer = LemmatizerModel.pretrained("lemma", "ja") \
-.setInputCols(["token"]) \
-.setOutputCol("lemma")
+# lemmatizer = LemmatizerModel.pretrained("lemma", "ja") \
+# .setInputCols(["token"]) \
+# .setOutputCol("lemma")
 
-embeddings = WordEmbeddingsModel.pretrained("japanese_cc_300d", "ja") \
-.setInputCols("sentence", "token") \
-.setOutputCol("embeddings")
+# embeddings = WordEmbeddingsModel.pretrained("japanese_cc_300d", "ja") \
+# .setInputCols("sentence", "token") \
+# .setOutputCol("embeddings")
 
-pipeline = Pipeline().setStages([
-documentAssembler,
-sentence,
-word_segmenter,
-# lemmatizer,
-embeddings
-])
+# pipeline = Pipeline().setStages([
+# documentAssembler,
+# sentence,
+# word_segmenter,
+# # lemmatizer,
+# embeddings
+# ])
 
 @api_view(['POST'])
 def evaluate_word(request, word):
