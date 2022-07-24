@@ -9,6 +9,7 @@ import GuessedWordsList from "../components/GuessedWordsList";
 import SubmitButton from "../components/SubmitButton";
 import WinModal from "../components/WinModal";
 import ExplanationModal from "../components/ExplanationModal";
+import InfoModal from "../components/InfoModal";
 import { SlidingWrapper } from "../components/MotionComponents";
 // import { guessedWordsDataProvider, useGuessedWordsData } from "../hooks/guessedWordsContext"
 
@@ -73,6 +74,7 @@ export default function HomePage() {
           <ExplanationModal setClose={() => setExplanationModalOpen(false)} />
         )}
       </AnimatePresence>
+      <InfoModal />
       <div className="flex justify-center bg-background h-full w-screen">
         <div className="flex-col items-center w-9/12 xl:w-7/12 2-xl:w-5/12 max-w-[800px]">
         <div class="divider" className="h-20" />
@@ -83,7 +85,7 @@ export default function HomePage() {
             {/* <div className="flex"> */}
               <div className="flex-1 mb-10 p-10 bg-cardbg rounded-xl">
                 <h3 className="text-3xl font-bold text-center p-3">
-                  ここで当たってみて
+                  当たってみる
                 </h3>
                 <Inputs setFound={setFound} />
               </div>

@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views import View
 from .models import Word, DailyKey
+import json
 # from celery import Celery
 # from celery.schedules import crontab
 
@@ -33,45 +34,11 @@ def new_game(request):
     key = random.randrange(1,4375)
   k = DailyKey(key=key)
   k.save()
-  return Response(status=status.HTTP_200_OK)
+
+  tiers = Word.objects.get(id=key).tiers
+
+  return Response(tiers)
   
-
-# @api_view(['GET'])
-# def load_daily_top_1000(request, key):
-#   if not key:
-#     key = random.randrange(882,6063)
-#   #for some reason pk goes from 882 to 6064
-#   if key < 882 or key > 6063:
-#     return Response(status=status.HTTP_404_NOT_FOUND)
-#   word = Word.objects.get(pk=key)
-#   dailyTop1000 = word.top1000_set.all()
-
-#   '''
-#   data structure:
-#   [
-#     {
-#       word: "word",
-#       score: 100,
-#       rank: 1,
-#     },
-#     {
-#       word: "words",
-#       score: 58,
-#       rank: 2,
-#     },
-#     ...
-#   ]
-#   '''
-#   data = []
-#   for i, w in enumerate(dailyTop1000):
-#     obj = {
-#       "word": w.top1000word,
-#       "score": w.score,
-#       "rank": 1000 - i
-#     }
-#     data.append(obj)
-
-#   return Response({"response": data})
 
 import math
 def sigmoid(x):
@@ -84,47 +51,13 @@ def score(a, b):
     x = a * b
     x = sum(x) / math.sqrt(sum(a*a)*sum(b*b))
     x = round(x, 6)
-#     return x
     return sigmoid(x)
 
-# @api_view(['POST'])
-# def evaluate_word(request, word):
-#   daily_key = DailyKey.objects.all().last().key
-#   daily_word = Word.objects.get(pk=daily_key)
-#   top1000 = daily_word.top1000_set.all()
-  
-#   is_top1000 = False
-
-#   for i, topword in enumerate(top1000):
-#     if word == topword.top1000word:
-#       if 1000 - i == 1:
-#         return Response(status=status.HTTP_302_FOUND)
-#       obj = {
-#         "word": word,
-#         "score": topword.score,
-#         "rank": 1000 - i
-#       }
-#       return Response(obj)
-
-#   #calculate score if not top 1000
-#   daily_word_vector = VectorWord.objects.filter(word_text=daily_word.word_text)[0].word_vec
-#   target_words = VectorWord.objects.filter(word_text=word)
-
-#   if len(target_words) == 0:
-#     return Response(status=status.HTTP_404_NOT_FOUND)
-#   target_word_vector = target_words[0].word_vec
-
-#   #typecast
-#   daily_word_vector = np.array(daily_word_vector).astype('float64')
-#   target_word_vector = np.array(target_word_vector).astype('float64')
-
-#   vscore = score(daily_word_vector, target_word_vector)
-#   obj = {
-#     "word": word,
-#     "score": vscore,
-#     "rank": None
-#   }
-#   return Response(obj)
+def isValidWord(word):
+  for char in word:
+    if ord(char) <= 128:
+      return False
+  return True
 
 import sparknlp
 from sparknlp.base import *
@@ -167,10 +100,13 @@ embeddings
 
 @api_view(['POST'])
 def evaluate_word(request, word):
+  if not isValidWord(word):
+    return Response(status=status.HTTP_404_NOT_FOUND)
+
   daily_key = DailyKey.objects.all().last().key
   daily_word = Word.objects.get(id=daily_key)
 
-  if word == daily_word:
+  if word == daily_word.word:
     return Response(status=status.HTTP_302_FOUND)
 
   data = spark.createDataFrame([[daily_word.word]]).toDF("text")
@@ -210,3 +146,22 @@ def evaluate_word(request, word):
     "rank": rank
   }
   return Response(obj)
+
+@api_view(['GET'])
+def get_tiers(request):
+  daily_key = DailyKey.objects.all().last().key
+  tiers = Word.objects.get(id=daily_key).tiers
+  res = [{
+    "tier": 25,
+    "score": round(float(tiers[0]), 2)
+  },{
+    "tier": 100,
+    "score": round(float(tiers[1]), 2)
+  },{
+    "tier": 500,
+    "score": round(float(tiers[2]), 2)
+  },{
+    "tier": 1000,
+    "score": round(float(tiers[3]), 2)
+  }]
+  return Response(res)

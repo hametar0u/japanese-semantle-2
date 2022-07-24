@@ -38,7 +38,7 @@ const WinModal = (props) => {
     >
         <h2 className="font-bold text-5xl text-h1 text-center mt-5 mb-6">当たり！</h2>
         <p className="text-p mb-2 text-xl">
-          {props.numTries}回目で成功した！
+          {props.numTries + 1}回目で成功した！
         </p>
         <SubmitButton onClick={props.restartGame} name="もう一回やろう？" style="mt-10"/>
       </motion.div>
