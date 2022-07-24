@@ -19,8 +19,8 @@ import { AnimatePresence } from "framer-motion";
 //some cross origin crap
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
-// axios.defaults.baseURL = "https://japanese-semantle.herokuapp.com"
-axios.defaults.baseURL = "http://localhost:8000"
+axios.defaults.baseURL = "https://japanese-semantle.herokuapp.com"
+// axios.defaults.baseURL = "http://localhost:8000"
 
 export const GuessedWordsContext = createContext({
   words: [],
