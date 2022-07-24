@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const InfoModal = () => {
+const InfoModal = ({ found }) => {
   const [open, setOpen] = useState(false);
   const [tiers, setTiers] = useState([]);
 
@@ -14,7 +14,7 @@ const InfoModal = () => {
     .catch(err => {
       console.log(err.response);
     });
-  }, []);
+  }, [found]);
 
   return (
     <div className="fixed transition-all" style={{"right": open ? "0" : "-350px"}}>

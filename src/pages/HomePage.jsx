@@ -1,12 +1,10 @@
 import axios from "axios";
 import { useState, createContext } from "react";
-import { Link } from "react-router-dom";
 
 //components
 import NavButton from "../components/NavButton";
 import { Inputs } from "../components/Inputs";
 import GuessedWordsList from "../components/GuessedWordsList";
-import SubmitButton from "../components/SubmitButton";
 import WinModal from "../components/WinModal";
 import ExplanationModal from "../components/ExplanationModal";
 import InfoModal from "../components/InfoModal";
@@ -60,7 +58,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="bg-background">
+  <div className="bg-background">
       <div className="flex justify-end">
         <h1 className="text-4xl font-bold leading-normal m-3 text-h1 mr-auto">
           M向けのゲーム
@@ -74,7 +72,7 @@ export default function HomePage() {
           <ExplanationModal setClose={() => setExplanationModalOpen(false)} />
         )}
       </AnimatePresence>
-      <InfoModal />
+      <InfoModal found={found}/>
       <div className="flex justify-center bg-background h-full w-screen">
         <div className="flex-col items-center w-9/12 xl:w-7/12 2-xl:w-5/12 max-w-[800px]">
         <div class="divider" className="h-20" />
@@ -153,12 +151,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-//temporary
-const containerStyle = {
-  width: "100vw",
-  height: "100vh",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-};
