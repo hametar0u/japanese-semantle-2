@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-import django_heroku
 import dotenv
 
 LOCAL = dotenv.find_dotenv != ''
@@ -30,7 +29,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY") if not LOCAL else 'django-insecure-6h%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['japanese-semantle.herokuapp.com', '127.0.0.1:8000', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1:8000', 'localhost']
 
 
 # Application definition
@@ -43,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'django_extensions',
 
     'corsheaders',
     'rest_framework',
@@ -158,8 +156,6 @@ STATIC_URL = '/static/'
 # ]
 
 # STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-
-django_heroku.settings(locals())
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
