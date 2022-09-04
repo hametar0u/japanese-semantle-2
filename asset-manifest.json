@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/japanese-semantle-2/static/css/main.0f035c92.css",
+    "main.js": "/japanese-semantle-2/static/js/main.ee254211.js",
+    "static/js/787.09f4f8fe.chunk.js": "/japanese-semantle-2/static/js/787.09f4f8fe.chunk.js",
+    "index.html": "/japanese-semantle-2/index.html",
+    "main.0f035c92.css.map": "/japanese-semantle-2/static/css/main.0f035c92.css.map",
+    "main.ee254211.js.map": "/japanese-semantle-2/static/js/main.ee254211.js.map",
+    "787.09f4f8fe.chunk.js.map": "/japanese-semantle-2/static/js/787.09f4f8fe.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0f035c92.css",
+    "static/js/main.ee254211.js"
+  ]
+}
