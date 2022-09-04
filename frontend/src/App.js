@@ -3,7 +3,7 @@ import HomePage from "./pages/HomePage";
 import WordDatabase from "./pages/WordDatabase";
 import Testpage from "./pages/Test";
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Route,
   Routes,
 } from "react-router-dom";
